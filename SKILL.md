@@ -15,16 +15,32 @@ generate from Claude or the CLI.
   generators mangle text — Canva templates don't.
 - The user wants the result **inside their Canva account** for further editing.
 
-## Setup (one time)
+## Setup (one time, per user)
 
-1. Create an integration at <https://www.canva.com/developers/integrations>
-   ("Create an integration"). Enable the REST APIs and these scopes:
-   `asset:read`, `asset:write`, `design:content:read`, `design:content:write`,
-   `design:meta:read`, `brandtemplate:meta:read`, `brandtemplate:content:read`.
-   Add `http://127.0.0.1:53682/callback` as a redirect URL.
-2. Install: `pip install .` (from this repo) — provides the `canvagen` CLI.
-3. `canvagen auth --client-id <your-client-id>` (add `--client-secret` for a
-   confidential client). Approve in the browser. Tokens are stored at
+Every user creates their **own** Canva app — apps in Draft can only be
+authorized by their owner, and tokens/AI credits are always per-user. The
+walkthrough below was verified end-to-end on 2026-10-10.
+
+1. Go to <https://www.canva.com/developers/> → **Your apps** → **Create an
+   app**. Name it (e.g. `canvagen`), choose **Public** (Private is
+   Enterprise-only and the choice is irreversible), and create it.
+2. Open the app → **Outside Canva** → **Go to setup** → **Start integrating**.
+   Canva requires **multi-factor authentication** on your account before it
+   issues API credentials — enable it under Canva's Account and security
+   settings first if prompted.
+3. On the app's **Configuration** page:
+   - Copy the **Client ID** (looks like `OC-…`). Note: this is *not* the App
+     ID shown on the Overview page — the App ID fails OAuth with
+     "client ID invalid".
+   - Under **Redirect URLs**, add `http://127.0.0.1:53682/callback`.
+   - Enable the **Canva REST APIs** integration method and tick these scopes:
+     `asset:read`, `asset:write`, `design:content:read`,
+     `design:content:write`, `design:meta:read`, `brandtemplate:meta:read`,
+     `brandtemplate:content:read`.
+   - Click **Generate secret** and copy the client secret (shown once).
+4. Install: `pip install .` (from this repo) — provides the `canvagen` CLI.
+5. `canvagen auth --client-id <your-client-id> --client-secret <your-secret>`.
+   Approve in the browser. Tokens are stored at
    `~/.config/canvagen/tokens.json` with `0600` permissions and refreshed
    automatically.
 
