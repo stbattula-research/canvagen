@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "canvagen"
+version = "0.1.0"
+description = "Generate images and designs through Canva's API — a Claude skill and CLI"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+
+[project.scripts]
+canvagen = "canvagen.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["canvagen*"]
