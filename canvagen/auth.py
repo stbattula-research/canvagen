@@ -1,13 +1,15 @@
 """OAuth 2.0 (PKCE) for Canva, with a local token store.
 
-One-time setup:
-    1. Create an integration at https://www.canva.com/developers/integrations
-       ("Create an integration"), enable the REST APIs and these scopes:
-       asset:read, asset:write, design:content:read, design:content:write,
-       design:meta:read, brandtemplate:meta:read, brandtemplate:content:read.
-       Add http://127.0.0.1:53682/callback as a redirect URL.
-    2. Run `canvagen auth --client-id <id>` (add --client-secret for a
-       confidential client). A browser opens; approve; tokens are stored at
+One-time setup per user (see SKILL.md for the verified walkthrough):
+    1. Create your own app at https://www.canva.com/developers/ (Your apps ->
+       Create an app -> Public -> Outside Canva -> Start integrating).
+       Canva requires MFA on your account before issuing API credentials.
+    2. On the app's Configuration page: copy the Client ID (OC-..., not the
+       App ID), add http://127.0.0.1:53682/callback as a redirect URL, enable
+       the Canva REST APIs with the scopes below, and generate a secret.
+    3. Run `canvagen setup` (guided) or
+       `canvagen auth --client-id <id> --client-secret <secret>`.
+       A browser opens; approve; tokens are stored at
        ~/.config/canvagen/tokens.json (0600).
 """
 from __future__ import annotations

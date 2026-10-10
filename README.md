@@ -17,7 +17,7 @@ agent) can
 
 ```bash
 pip install .
-canvagen auth --client-id <id-from-canva-developers>   # one-time browser approval
+canvagen setup   # guided one-time setup: creates the connection to your Canva account
 canvagen imagine "a fox reading a newspaper, watercolor" --aspect-ratio landscape
 canvagen autofill <template-id> --data '{"title":"Ava turns 7!"}' --export png
 ```

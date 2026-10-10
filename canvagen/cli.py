@@ -12,6 +12,40 @@ def cmd_auth(args):
     print("Connected. Tokens stored in ~/.config/canvagen/tokens.json")
 
 
+SETUP_STEPS = """\
+First, create your own Canva app (one time, ~5 minutes in the browser).
+Your app is private to you — Canva draft apps can only be authorized by
+their owner, and your AI credits are always your own.
+
+1. Open https://www.canva.com/developers/ -> Your apps -> Create an app.
+   Name it (e.g. canvagen), choose Public, and create it.
+2. Open the app -> Outside Canva -> Go to setup -> Start integrating.
+   (Canva requires multi-factor authentication on your account first —
+   enable it under Canva's Account and security settings if prompted.)
+3. On the app's Configuration page:
+   - Copy the Client ID (looks like OC-...). This is NOT the App ID
+     on the Overview page — the App ID fails OAuth.
+   - Under Redirect URLs add: http://127.0.0.1:53682/callback
+   - Enable "Canva REST APIs" and tick: asset:read, asset:write,
+     design:content:read, design:content:write, design:meta:read,
+     brandtemplate:meta:read, brandtemplate:content:read
+   - Click Generate secret and copy the client secret (shown once).
+"""
+
+
+def cmd_setup(args):
+    import getpass
+    from .auth import run_auth_flow
+    print(SETUP_STEPS)
+    input("Press Enter once you've created the app and copied the credentials…")
+    client_id = input("Client ID (OC-...): ").strip()
+    client_secret = getpass.getpass("Client secret (hidden): ").strip()
+    if not client_id:
+        raise SystemExit("error: a Client ID is required.")
+    run_auth_flow(client_id, client_secret or None)
+    print("Connected. Tokens stored in ~/.config/canvagen/tokens.json")
+
+
 def cmd_imagine(args):
     from .generate import imagine, download_image
     image = imagine(args.prompt, aspect_ratio=args.aspect_ratio, model=args.model,
@@ -63,6 +97,10 @@ def main(argv=None):
     a.add_argument("--client-id", required=True)
     a.add_argument("--client-secret", default=None)
     a.set_defaults(fn=cmd_auth)
+
+    s = sub.add_parser("setup",
+                       help="Guided first-time setup: create your Canva app, then connect")
+    s.set_defaults(fn=cmd_setup)
 
     im = sub.add_parser("imagine", help="Generate an image from a text prompt")
     im.add_argument("prompt")

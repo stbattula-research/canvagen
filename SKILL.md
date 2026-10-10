@@ -21,6 +21,12 @@ Every user creates their **own** Canva app — apps in Draft can only be
 authorized by their owner, and tokens/AI credits are always per-user. The
 walkthrough below was verified end-to-end on 2026-10-10.
 
+**If Canva isn't connected yet, don't make the user read docs — guide them.**
+When any command fails with "Not connected to Canva yet", offer the guided
+setup: walk them through the steps below conversationally (open the URLs for
+them, wait for each step), then run `canvagen setup`, which prompts for the
+Client ID/secret and finishes OAuth in the browser automatically.
+
 1. Go to <https://www.canva.com/developers/> → **Your apps** → **Create an
    app**. Name it (e.g. `canvagen`), choose **Public** (Private is
    Enterprise-only and the choice is irreversible), and create it.
@@ -39,10 +45,10 @@ walkthrough below was verified end-to-end on 2026-10-10.
      `brandtemplate:content:read`.
    - Click **Generate secret** and copy the client secret (shown once).
 4. Install: `pip install .` (from this repo) — provides the `canvagen` CLI.
-5. `canvagen auth --client-id <your-client-id> --client-secret <your-secret>`.
-   Approve in the browser. Tokens are stored at
-   `~/.config/canvagen/tokens.json` with `0600` permissions and refreshed
-   automatically.
+5. Run `canvagen setup` and follow the prompts (or non-interactively:
+   `canvagen auth --client-id <id> --client-secret <secret>`). Approve in the
+   browser. Tokens are stored at `~/.config/canvagen/tokens.json` with `0600`
+   permissions and refreshed automatically.
 
 ## Capabilities
 
